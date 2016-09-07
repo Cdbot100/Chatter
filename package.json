@@ -1,0 +1,23 @@
+{
+  "name": "chatter",
+  "version": "1.0.0",
+  "description": "chatbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cdbot100/Chatter.git"
+  },
+  "keywords": [
+    "npm",
+    "botkit"
+  ],
+  "author": "SG",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cdbot100/Chatter/issues"
+  },
+  "homepage": "https://github.com/Cdbot100/Chatter#readme"
+}
