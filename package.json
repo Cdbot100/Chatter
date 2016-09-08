@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/Cdbot100/Chatter/issues"
   },
-  "homepage": "https://github.com/Cdbot100/Chatter#readme"
+  "homepage": "https://github.com/Cdbot100/Chatter#readme",
+  "dependencies": {
+    "botkit": "^0.2.2"
+  }
 }

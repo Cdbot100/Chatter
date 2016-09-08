@@ -1,4 +1,5 @@
 /*
+Mostly hacked together sample code, this chatbot 
   Get a Bot token from Slack:
     -> http://my.slack.com/services/new/bot
   Run your bot from the command line:
@@ -7,11 +8,12 @@
 //includes
 var Botkit = require('Botkit');
 var os = require('os');
-var MongoClient = require('mongodb').MongoClient
-  , assert = require('assert');
+
+/* var MongoClient = require('mongodb').MongoClient
+  , assert = require('assert'); 
 
 // Connection URL
-var url = 'mongodb://localhost:27017/myproject';
+var url = 'mongodb://localhost:27017/myproject'; 
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
@@ -19,25 +21,26 @@ MongoClient.connect(url, function(err, db) {
   console.log("Connected successfully to server");
 
   db.close();
-});
+}); */
 
-//did you pass the token?
+//did you pass the token? (can be passed automatically using run.sh)
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
     process.exit(1);
 }
 
-//controller for our slackbot
+//controller for our slackbot, a folder to save jsons, and turn on console debugging 
 var controller = Botkit.slackbot({
+    json_file_store: './json_database.db',
     debug: true
 });
-
+//spawn the token, set its value, start the chatbot
 var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
 
-controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', function(bot, message) {
+controller.hears(['hello', 'hi', 'hey'], 'direct_message,direct_mention,mention', function(bot, message) {
 
     bot.api.reactions.add({
         timestamp: message.ts,
@@ -49,7 +52,6 @@ controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', funct
         }
     });
 
-
     controller.storage.users.get(message.user, function(err, user) {
         if (user && user.name) {
             bot.reply(message, 'Hello ' + user.name + '!!');
@@ -58,6 +60,7 @@ controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', funct
         }
     });
 });
+
 
 controller.hears(['call me (.*)', 'my name is (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var name = message.match[1];
@@ -73,6 +76,7 @@ controller.hears(['call me (.*)', 'my name is (.*)'], 'direct_message,direct_men
         });
     });
 });
+
 
 controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention,mention', function(bot, message) {
 
@@ -171,6 +175,32 @@ controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function
 });
 
 
+controller.hears(['pizzatime'], 'message_received', function(bot,message) {
+    askFlavor = function(response, convo) {
+      convo.ask('What flavor of pizza do you want?', function(response, convo) {
+        convo.say('Awesome.');
+        askSize(response, convo);
+        convo.next();
+      });
+    }
+    askSize = function(response, convo) {
+      convo.ask('What size do you want?', function(response, convo) {
+        convo.say('Ok.')
+        askWhereDeliver(response, convo);
+        convo.next();
+      });
+    }
+    askWhereDeliver = function(response, convo) {
+      convo.ask('So where do you want it delivered?', function(response, convo) {
+        convo.say('Ok! Good bye.');
+        convo.next();
+      });
+    }
+
+    bot.startConversation(message, askFlavor);
+});
+
+
 controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your name'],
     'direct_message,direct_mention,mention', function(bot, message) {
 
@@ -182,6 +212,8 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
              '>. I have been running for ' + uptime + ' on ' + hostname + '.');
 
     });
+
+
 
 controller.hears(['attach'],['direct_message','direct_mention'],function(bot,message) {
 
