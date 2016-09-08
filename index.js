@@ -1,10 +1,7 @@
-/*
-Mostly hacked together sample code, this chatbot 
-  Get a Bot token from Slack:
-    -> http://my.slack.com/services/new/bot
-  Run your bot from the command line:
-    token=<MY TOKEN> node slack_bot.js
-  */
+
+//Mostly hacked together sample code =)
+//Scott Gordon
+
 //includes
 var Botkit = require('Botkit');
 var os = require('os');
@@ -133,8 +130,6 @@ controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention
                                 });
                             });
 
-
-
                         } else {
                             // this happens if the conversation ended prematurely for some reason
                             bot.reply(message, 'OK, nevermind!');
@@ -175,7 +170,7 @@ controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function
 });
 
 
-controller.hears(['pizzatime'], 'message_received', function(bot,message) {
+controller.hears(['pizzatime'], 'message_received,direct_message,direct_mention,mention', function(bot,message) {
     askFlavor = function(response, convo) {
       convo.ask('What flavor of pizza do you want?', function(response, convo) {
         convo.say('Awesome.');
@@ -213,8 +208,30 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
 
     });
 
+//we want the controller to be able to query a DB, find our student based on ID, and return a list of grade objects
+//heres our "Hears" function. a slash command for grades would have similar behavior
 
+controller.hears(['grades', 'marks', 'what are my'],
+    'direct_message,direct_mention,mention', function(bot, message) {
 
+    student_id = function(response, convo) {
+      convo.ask('What is your student ID?', function(response, convo) {
+        convo.say('Awesome, let me look for those...');
+        //askSize(response, convo);
+        convo.next();
+    });
+    }
+    //retrieve grades based on ID from DB
+
+    //handle no student found Error
+
+    //list grades individually 
+
+    //print overall grade, (handle A marks, B marks , C or below) with smiley face
+    bot.startConversation(message, student_id);
+});
+
+//good example of how to print attachments legiably 
 controller.hears(['attach'],['direct_message','direct_mention'],function(bot,message) {
 
   var attachments = [];
