@@ -228,7 +228,7 @@ controller.hears(['grades', 'marks', 'what are my'],
 
     //list grades individually 
 
-    //print overall grade, (handle A marks, B marks , C or below) with smiley face
+    //print overall grade, (handle A marks, B marks , C or below with smiley face or good job or something)
     bot.startConversation(message, student_id);
 });
 
