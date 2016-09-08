@@ -18,6 +18,7 @@ MongoClient.connect(url, function(err, db) {
     console.log('Unable to connect to the mongoDB server. Error:', err);
     } else {
     console.log("Connected successfully to: ", url);
+    }
 }); 
 
 //did you pass the token? (for mwsu sandbox api token can be passed automatically using run.sh)
@@ -152,7 +153,6 @@ controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function
                 callback: function(response, convo) {
                     convo.say('Bye!');
                     convo.next();
-                      db.close();   //sg
                     setTimeout(function() {
                         process.exit();
                     }, 3000);
@@ -196,7 +196,7 @@ controller.hears(['pizzatime'], 'message_received,direct_message,direct_mention,
     bot.startConversation(message, askFlavor);
 });
 
-//good method to return process info to the user 
+
 controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your name'],
     'direct_message,direct_mention,mention', function(bot, message) {
 
@@ -228,7 +228,7 @@ controller.hears(['grades', 'marks', 'what are my'],
 
     //list grades individually 
 
-    //print overall grade, (handle A marks, B marks , C or below with smiley face or good job or something)
+    //print overall grade, (handle A marks, B marks , C or below) with smiley face
     bot.startConversation(message, student_id);
 });
 
