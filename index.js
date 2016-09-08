@@ -18,7 +18,6 @@ MongoClient.connect(url, function(err, db) {
     console.log('Unable to connect to the mongoDB server. Error:', err);
     } else {
     console.log("Connected successfully to: ", url);
-  db.close();
 }); 
 
 //did you pass the token? (for mwsu sandbox api token can be passed automatically using run.sh)
@@ -153,6 +152,7 @@ controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function
                 callback: function(response, convo) {
                     convo.say('Bye!');
                     convo.next();
+                      db.close();   //sg
                     setTimeout(function() {
                         process.exit();
                     }, 3000);
