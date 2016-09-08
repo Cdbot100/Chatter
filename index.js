@@ -232,6 +232,11 @@ controller.hears(['grades', 'marks', 'what are my'],
     bot.startConversation(message, student_id);
 });
 
+//simple response 
+controller.hears(['thanks','thank you','ty'], 'direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'No problem');
+});
+
 //good example of how to print attachments legiably 
 controller.hears(['attach'],['direct_message','direct_mention'],function(bot,message) {
 
