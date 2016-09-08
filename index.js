@@ -6,19 +6,20 @@
 var Botkit = require('Botkit');
 var os = require('os');
 
-/* var MongoClient = require('mongodb').MongoClient
+var MongoClient = require('mongodb').MongoClient
   , assert = require('assert'); 
 
 // Connection URL
-var url = 'mongodb://localhost:27017/myproject'; 
+var url = 'mongodb://localhost:27017/chatter'; 
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-
+    if (err) {
+    console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+    console.log("Connected successfully to: ", url);
   db.close();
-}); */
+}); 
 
 //did you pass the token? (for mwsu sandbox api token can be passed automatically using run.sh)
 if (!process.env.token) {
@@ -36,7 +37,7 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
-
+//bot hears hello in a direct message or a @chatbot message 
 controller.hears(['hello', 'hi', 'hey'], 'direct_message,direct_mention,mention', function(bot, message) {
 
     bot.api.reactions.add({
@@ -58,7 +59,7 @@ controller.hears(['hello', 'hi', 'hey'], 'direct_message,direct_mention,mention'
     });
 });
 
-
+//example code on how to use conversations to have long meaningful exchanges. also storage.users.save
 controller.hears(['call me (.*)', 'my name is (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var name = message.match[1];
     controller.storage.users.get(message.user, function(err, user) {
@@ -74,7 +75,7 @@ controller.hears(['call me (.*)', 'my name is (.*)'], 'direct_message,direct_men
     });
 });
 
-
+//example of referencing code in the local file
 controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention,mention', function(bot, message) {
 
     controller.storage.users.get(message.user, function(err, user) {
@@ -141,7 +142,7 @@ controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention
     });
 });
 
-
+//good method for shutdown 
 controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function(bot, message) {
 
     bot.startConversation(message, function(err, convo) {
@@ -169,7 +170,7 @@ controller.hears(['shutdown'], 'direct_message,direct_mention,mention', function
     });
 });
 
-
+//a simple conversation about za
 controller.hears(['pizzatime'], 'message_received,direct_message,direct_mention,mention', function(bot,message) {
     askFlavor = function(response, convo) {
       convo.ask('What flavor of pizza do you want?', function(response, convo) {
@@ -195,7 +196,7 @@ controller.hears(['pizzatime'], 'message_received,direct_message,direct_mention,
     bot.startConversation(message, askFlavor);
 });
 
-
+//good method to return process info to the user 
 controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your name'],
     'direct_message,direct_mention,mention', function(bot, message) {
 
@@ -216,7 +217,7 @@ controller.hears(['grades', 'marks', 'what are my'],
 
     student_id = function(response, convo) {
       convo.ask('What is your student ID?', function(response, convo) {
-        convo.say('Awesome, let me look for those...');
+        convo.say('Awesome, let me look for those...I dont have them lulz');
         //askSize(response, convo);
         convo.next();
     });

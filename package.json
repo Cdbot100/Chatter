@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Cdbot100/Chatter#readme",
   "dependencies": {
-    "botkit": "^0.2.2"
+    "botkit": "^0.2.2",
+    "mongodb": "^2.2.9"
   }
 }
