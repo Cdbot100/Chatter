@@ -20,7 +20,7 @@ MongoClient.connect(url, function(err, db) {
   db.close();
 }); */
 
-//did you pass the token? (can be passed automatically using run.sh)
+//did you pass the token? (for mwsu sandbox api token can be passed automatically using run.sh)
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
     process.exit(1);
