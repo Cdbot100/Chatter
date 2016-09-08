@@ -18,7 +18,7 @@ MongoClient.connect(url, function(err, db) {
     console.log('Unable to connect to the mongoDB server. Error:', err);
     } else {
     console.log("Connected successfully to: ", url);
-    }
+    } //sg
 }); 
 
 //did you pass the token? (for mwsu sandbox api token can be passed automatically using run.sh)
