@@ -12,6 +12,9 @@ var MongoClient = require('mongodb').MongoClient
 // Connection URL
 var url = 'mongodb://localhost:27017/chatter'; 
 
+//known keywords
+var keywords = ['hello','thanks','thank you','ty', 'grades', 'marks', 'what are my','hi', 'hey','call me (.*)', 'my name is (.*)','what is my name', 'who am i','shutdown','uptime', 'identify yourself', 'who are you', 'what is your name', 'pizzatime', 'marks', 'attach'];
+
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
     if (err) {
@@ -275,6 +278,10 @@ controller.hears(['attach'],['direct_message','direct_mention'],function(bot,mes
   });
 });
 
+//handler for unknown keyword
+controller.hears(['',!keywords ],'direct_message,direct_mention,mention',function(bot,message) {  
+   bot.reply(message, 'wha?'); 
+})
 
 function formatUptime(uptime) {
     var unit = 'second';
