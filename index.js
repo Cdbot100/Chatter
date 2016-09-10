@@ -6,14 +6,29 @@
 var Botkit = require('Botkit');
 var os = require('os');
 
+var cleverbot = require("cleverbot.io"),  
+//my personal cleverbot API user Credentials from https://cleverbot.io/keys
+cleverbot = new cleverbot('x3Z8qL4QPkx56rwf', 'cEjX3I3TA4EvZAwWVGhC7dNBJ3lhvFZS');
+
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert'); 
 
 // Connection URL
 var url = 'mongodb://localhost:27017/chatter'; 
 
-//known keywords
+//known keyword list
 var keywords = ['hello','thanks','thank you','ty', 'grades', 'marks', 'what are my','hi', 'hey','call me (.*)', 'my name is (.*)','what is my name', 'who am i','shutdown','uptime', 'identify yourself', 'who are you', 'what is your name', 'pizzatime', 'marks', 'attach'];
+
+// name and create the cleverbot session 
+cleverbot.setNick("cdbot");  
+cleverbot.create(function (err, session) {  
+    //handler for error during creation 
+    if (err) {
+        console.log('cleverbot create fail.');
+    } else {
+        console.log('cleverbot create success.');
+    }
+});
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
@@ -278,9 +293,21 @@ controller.hears(['attach'],['direct_message','direct_mention'],function(bot,mes
   });
 });
 
-//handler for unknown keyword
+//handler for unknown keyword - cleverbot makes him have smart/silly responses. "more human like" 
 controller.hears(['',!keywords ],'direct_message,direct_mention,mention',function(bot,message) {  
-   bot.reply(message, 'wha?'); 
+  //pass the message handler
+  var msg = message.text;
+  //send the cleverbot query using the message field
+    cleverbot.ask(msg, function (err, response) {
+        //handler for errors
+        if (!err) {
+            //no error
+            bot.reply(message, response);
+        } else {
+            //log error on console
+            console.log('cleverbot err: ' + err);
+        }
+    });
 })
 
 function formatUptime(uptime) {
