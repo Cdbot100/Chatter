@@ -16,7 +16,7 @@ var MongoClient = require('mongodb').MongoClient
 // Connection URL
 var url = 'mongodb://localhost:27017/chatter'; 
 
-//known keyword list
+//known keyword list (figure out a better way to declare this its ugly)
 var keywords = ['hello','thanks','thank you','ty', 'grades', 'marks', 'what are my','hi', 'hey','call me (.*)', 'my name is (.*)','what is my name', 'who am i','shutdown','uptime', 'identify yourself', 'who are you', 'what is your name', 'pizzatime', 'marks', 'attach'];
 
 // name and create the cleverbot session 
