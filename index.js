@@ -293,7 +293,7 @@ controller.hears(['attach'],['direct_message','direct_mention'],function(bot,mes
   });
 });
 
-//handler for unknown keyword - cleverbot makes him have smart/silly responses. "more human like" 
+//handler for unknown keyword - cleverbot makes him have silly responses, not nearly as intelligent as i'd hoped...
 controller.hears(['',!keywords ],'direct_message,direct_mention,mention',function(bot,message) {  
   //pass the message handler
   var msg = message.text;
