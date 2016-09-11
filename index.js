@@ -10,14 +10,19 @@ var cleverbot = require("cleverbot.io"),
 //my personal cleverbot API user Credentials from https://cleverbot.io/keys
 cleverbot = new cleverbot('x3Z8qL4QPkx56rwf', 'cEjX3I3TA4EvZAwWVGhC7dNBJ3lhvFZS');
 
-var MongoClient = require('mongodb').MongoClient
-  , assert = require('assert'); 
+var MongoClient = require('mongodb').MongoClient,
+db = require('mongodb').db,
+    assert = require('assert'); 
 
 // Connection URL
 var url = 'mongodb://localhost:27017/chatter'; 
 
 //known keyword list (figure out a better way to declare this its ugly)
 var keywords = ['hello','thanks','thank you','ty', 'grades', 'marks', 'what are my','hi', 'hey','call me (.*)', 'my name is (.*)','what is my name', 'who am i','shutdown','uptime', 'identify yourself', 'who are you', 'what is your name', 'pizzatime', 'marks', 'attach'];
+
+var user2 = {student_id:1234, name: 'student1', age: 22, roles: ['student'], grades: ['97','98','99','100']};
+
+var collection, db; 
 
 // name and create the cleverbot session 
 cleverbot.setNick("cdbot");  
@@ -30,14 +35,42 @@ cleverbot.create(function (err, session) {
     }
 });
 
+function addDocument(){
+collection.insert([user2], function(err, result){
+        if (err) {
+         console.log(err);
+        } else {
+            console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+        }
+    });
+}
+
+function findDocument(){
+    var cursor = collection.find({student_id:1234});
+    cursor.each(function(err, doc) {
+        if(err)
+            throw err;
+        if(doc==null)
+            return;
+ 
+        console.log("document find:");
+        console.log(doc.name);
+        console.log(doc.grades);
+        //bot.reply([user2]);
+    });
+}
+ 
 // Use connect method to connect to the server
-MongoClient.connect(url, function(err, db) {
-    if (err) {
-    console.log('Unable to connect to the mongoDB server. Error:', err);
-    } else {
-    console.log("Connected successfully to: ", url);
-    } //sg
-}); 
+var db = MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+             } else {
+                 collection = db.collection('students');
+                 console.log("Connected successfully to: ", url);
+                 addDocument();
+        } //sg
+    });
+
 
 //did you pass the token? (for mwsu sandbox api token can be passed automatically using run.sh)
 if (!process.env.token) {
@@ -235,7 +268,9 @@ controller.hears(['grades', 'marks', 'what are my'],
 
     student_id = function(response, convo) {
       convo.ask('What is your student ID?', function(response, convo) {
-        convo.say('Awesome, let me look for those...I dont have them lulz');
+        convo.say('Awesome, let me look for those...');
+        findDocument();
+            //convo.say(result);
         //askSize(response, convo);
         convo.next();
     });
