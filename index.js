@@ -1,6 +1,5 @@
-
-//Mostly hacked together sample code =)
 //Scott Gordon
+//written for node.js built on botkit and cleverbot  
 
 //includes
 var Botkit = require('Botkit');
@@ -35,31 +34,6 @@ cleverbot.create(function (err, session) {
     }
 });
 
-function addDocument(){
-collection.insert([user2], function(err, result){
-        if (err) {
-         console.log(err);
-        } else {
-            console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
-        }
-    });
-}
-
-function findDocument(){
-    var cursor = collection.find({student_id:1234});
-    cursor.each(function(err, doc) {
-        if(err)
-            throw err;
-        if(doc==null)
-            return;
- 
-        console.log("document find:");
-        console.log(doc.name);
-        console.log(doc.grades);
-        //bot.reply([user2]);
-    });
-}
- 
 // Use connect method to connect to the server
 var db = MongoClient.connect(url, function(err, db) {
             if (err) {
@@ -67,7 +41,7 @@ var db = MongoClient.connect(url, function(err, db) {
              } else {
                  collection = db.collection('students');
                  console.log("Connected successfully to: ", url);
-                 addDocument();
+                 addDocument(user2);
         } //sg
     });
 
@@ -266,14 +240,23 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
 controller.hears(['grades', 'marks', 'what are my'],
     'direct_message,direct_mention,mention', function(bot, message) {
 
+    var result;
+
     student_id = function(response, convo) {
-      convo.ask('What is your student ID?', function(response, convo) {
-        convo.say('Awesome, let me look for those...');
-        findDocument();
-            //convo.say(result);
-        //askSize(response, convo);
-        convo.next();
-    });
+        convo.ask('What is your student ID?', function(response, convo) {
+        
+            var tempid = message.match[1];
+            convo.say('Thanks,');
+            findDocument(message.text,result);
+            sayresult(response, convo);
+            convo.next();
+        });
+        }
+        sayresult = function(response, convo) {
+            convo.say(String(result))
+            convo.say('Ok!');
+            convo.next();
+        
     }
     //retrieve grades based on ID from DB
 
@@ -362,3 +345,31 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
+
+function addDocument(thing){
+collection.insert(thing, function(err, result){
+        if (err) {
+         console.log(err);
+        } else {
+            console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+        }
+    });
+}
+
+function findDocument(temp,result){
+    var cursor = collection.find({temp});
+    cursor.each(function(err, doc) {
+        if(err)
+            throw err;
+        if(doc==null)
+            return;
+ 
+        result = doc.name
+        
+        console.log("document find:");
+        console.log(doc.name);
+        console.log(doc.grades);
+
+    });
+}
+ 
